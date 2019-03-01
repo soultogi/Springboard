@@ -53,9 +53,9 @@ ORDER BY facid
 /* Q4: How can you retrieve the details of facilities with ID 1 and 5?
 Write the query without using the OR operator. */
 
-SELECT * FROM Facilities WHERE facid = 1
+SELECT facid, name, membercost, guestcost, initialoutlay, monthlymaintenance FROM Facilities WHERE facid = 1
 UNION
-SELECT * FROM Facilities WHERE facid = 5
+SELECT facid, name, membercost, guestcost, initialoutlay, monthlymaintenance FROM Facilities WHERE facid = 5
 
 /* Q5: How can you produce a list of facilities, with each labelled as
 'cheap' or 'expensive', depending on if their monthly maintenance cost is
@@ -111,19 +111,35 @@ ORDER BY cost DESC
 
 /* Q9: This time, produce the same result as in Q8, but using a subquery. */
 
-???
+SELECT * FROM 
+	(SELECT CONCAT(m.firstname, ' ' ,m.surname) AS Full_name,
+	f.name,
+	CASE WHEN b.memid = 0 THEN b.slots*f.guestcost 
+	ELSE b.slots*f.membercost END AS cost
+	FROM Bookings b
+	JOIN Facilities f ON b.facid = f.facid
+	JOIN Members m ON b.memid = m.memid
+	WHERE DATE_FORMAT(b.starttime, '%Y-%m-%d') = '2012-09-14'
+	GROUP BY 1,2) AS Flying_Table
+WHERE cost>= 30
+ORDER BY cost DESC
+
 
 /* Q10: Produce a list of facilities with a total revenue less than 1000.
 The output of facility name and total revenue, sorted by revenue. Remember
 that there's a different cost for guests and members! */
 
-SELECT 	f.name,
-		MONTH(starttime),
-		CONCAT(m.firstname, ' ', m.surname),
-	CASE WHEN b.memid = 0 THEN f.guestcost*SUM(slots) 
-	ELSE f.membercost*SUM(slots) END AS total_income
+select name, total - (initialoutlay + count(ay)*monthlymaintenance) as realincome
+from
+(select name,ay,sum(total_income) as total, initialoutlay, monthlymaintenance
+from (
+SELECT 	f.name,MONTH(starttime ) as ay,initialoutlay,monthlymaintenance,
+	CASE WHEN b.memid = 0 THEN f.guestcost*slots 
+	ELSE f.membercost*slots END AS total_income
 FROM Bookings b
 JOIN Facilities f ON b.facid = b.facid
-JOIN Members m ON b.memid = m.memid
-GROUP BY 1, b.memid, MONTH(starttime)
-
+JOIN Members m ON b.memid = m.memid) as tbl
+group by name,ay, initialoutlay, monthlymaintenance) as tbl2
+group by name
+having realincome <= 1000
+order by (total - (initialoutlay + count(ay)*monthlymaintenance)) DESC
