@@ -129,17 +129,28 @@ ORDER BY cost DESC
 The output of facility name and total revenue, sorted by revenue. Remember
 that there's a different cost for guests and members! */
 
-select name, total - (initialoutlay + count(ay)*monthlymaintenance) as realincome
-from
-(select name,ay,sum(total_income) as total, initialoutlay, monthlymaintenance
-from (
-SELECT 	f.name,MONTH(starttime ) as ay,initialoutlay,monthlymaintenance,
-	CASE WHEN b.memid = 0 THEN f.guestcost*slots 
-	ELSE f.membercost*slots END AS total_income
+SELECT name, SUM( Monthly_Revenue ) 
+FROM (
+
+SELECT name, 
+MONTH , SUM( Income ) - ( initialoutlay /3 + monthlymaintenance ) AS Monthly_Revenue
+FROM (
+
+SELECT f.name, MONTH( b.starttime ) AS 
+MONTH , b.memid, slots, f.initialoutlay, f.monthlymaintenance, 
+CASE 
+WHEN b.memid =0
+THEN f.guestcost * b.slots
+ELSE f.membercost * b.slots
+END AS income
 FROM Bookings b
 JOIN Facilities f ON b.facid = b.facid
-JOIN Members m ON b.memid = m.memid) as tbl
-group by name,ay, initialoutlay, monthlymaintenance) as tbl2
-group by name
-having realincome <= 1000
-order by (total - (initialoutlay + count(ay)*monthlymaintenance)) DESC
+JOIN Members m ON b.memid = m.memid
+) AS inner1
+GROUP BY name, 
+MONTH
+) AS inner2
+GROUP BY name
+ORDER BY Monthly_Revenue DESC
+
+
