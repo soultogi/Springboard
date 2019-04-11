@@ -43,8 +43,6 @@ Age < 150
 Maturity Size < 4
 Health < 3
 
-
-
 Overall scatter matrix plot also, plotted to be able to glance any possible correlations,
 both between variables and target variable.
 
