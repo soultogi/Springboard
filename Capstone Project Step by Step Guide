@@ -35,6 +35,16 @@ Count plots shown for the ease of the data distributions, and possible outlier d
 To help the computation speed, text data is removed from the data frame, until further analyse. 
 For the basic statistical analysis and ML aplications, these string data will be omitted.
 
+Plot by plot, explanation about data distribution and outlier detection has done.
+Outlier cases checked individually and real outliers are removed from the df.
+
+Fee < 1000
+Age < 150 
+Maturity Size < 4
+Health < 3
+
+
+
 Overall scatter matrix plot also, plotted to be able to glance any possible correlations,
 both between variables and target variable.
 
