@@ -46,3 +46,6 @@ Health < 3
 Overall scatter matrix plot also, plotted to be able to glance any possible correlations,
 both between variables and target variable.
 
+Kruskal-Wallis test checked there is a difference between cats and dogs. NOT SURE ABOUT THIS TEST THOUGH.
+
+Crosstabs for all variables and details explained. Some possible correlations and interesting data gatherings noted.
