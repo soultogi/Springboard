@@ -40,12 +40,13 @@ Outlier cases checked individually and real outliers are removed from the df.
 
 Fee < 1000
 Age < 150 
-Maturity Size < 4
-Health < 3
 
 Overall scatter matrix plot also, plotted to be able to glance any possible correlations,
 both between variables and target variable.
 
-Kruskal-Wallis test checked there is a difference between cats and dogs. NOT SURE ABOUT THIS TEST THOUGH.
+Kruskal-Wallis test checked there is a difference between cats and dogs. 
+Test shows that there is a statistically significant difference between these two groups. Since these are different data, from
+different populations different ML techniques can be applied.
 
 Crosstabs for all variables and details explained. Some possible correlations and interesting data gatherings noted.
+To be able to analyse, relations bwtween these variables, Chi-square independence test is used.
